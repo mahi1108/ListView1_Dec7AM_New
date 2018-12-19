@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if(status == PackageManager.PERMISSION_GRANTED){
             readFiles()
-        }else{
+        }else{ //
           ActivityCompat.requestPermissions(
               this@MainActivity,
               arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
