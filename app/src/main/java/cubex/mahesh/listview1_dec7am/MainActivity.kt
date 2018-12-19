@@ -2,16 +2,21 @@ package cubex.mahesh.listview1_dec7am
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
+import android.media.ThumbnailUtils
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.indiview.view.*
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -22,13 +27,13 @@ class MainActivity : AppCompatActivity() {
 
         val status = ContextCompat.checkSelfPermission(
             this@MainActivity,
-            Manifest.permission.READ_EXTERNAL_STORAGE)
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if(status == PackageManager.PERMISSION_GRANTED){
             readFiles()
         }else{
           ActivityCompat.requestPermissions(
               this@MainActivity,
-              arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+              arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
               111)
         }
     } // onCreate
@@ -60,11 +65,39 @@ class MainActivity : AppCompatActivity() {
             files)
         lview.adapter = myadapter */
         var myadpter = object:BaseAdapter(){
-            override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
+            override fun getView(pos: Int, p1: View?, p2: ViewGroup?): View {
 
                 var inflater = LayoutInflater.from(this@MainActivity)
 
                 var v = inflater.inflate(R.layout.indiview,null)
+
+                Log.i("and7amdec","getView Method : $pos")
+
+                var new_file:File = files[pos]
+
+              //  var u:Uri = Uri.fromFile(new_file)
+
+              //  v.iview.setImageURI(u)
+
+                var bmp = BitmapFactory.decodeFile(new_file.path)
+
+                var bmp_thumbnail = ThumbnailUtils.
+                    extractThumbnail(bmp,50,50)
+
+                v.iview.setImageBitmap(bmp_thumbnail)
+
+                v.name.text = new_file.name
+
+                v.size.text = new_file.length().toString() + "bytes"
+
+                v.date.text = new_file.lastModified().toString()
+
+                v.del.setOnClickListener {
+                    new_file.delete()
+
+                    files = file.listFiles()
+                    notifyDataSetChanged()
+                }
 
                 return  v
             }
@@ -75,6 +108,7 @@ class MainActivity : AppCompatActivity() {
                 return  0
             }
             override fun getCount(): Int {
+
                 return files.size
             }
         }

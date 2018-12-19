@@ -3,7 +3,7 @@
           package="cubex.mahesh.listview1_dec7am">
 
     <uses-permission android:name=
-                             "android.permission.READ_EXTERNAL_STORAGE"/>
+                             "android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
             android:allowBackup="true"
